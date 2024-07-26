@@ -4,8 +4,12 @@ ConnectToMongo();
 const cors = require("cors");
 const app = express();
 app.use(express.json());
-app.use(cors());
-
+app.use(
+  cors({
+    origin: "https://login-app-api.vercel.app", // Frontend origin
+    credentials: true,
+  })
+);
 const PORT = 4000;
 app.use("/customer", require("./Routes/customer_Routes"));
 
