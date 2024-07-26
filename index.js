@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const PORT = 4000;
+const PORT = process.env.PORT||4000
 app.use("/customer", require("./Routes/customer_Routes"));
 
 //uploads
