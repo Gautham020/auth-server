@@ -1,9 +1,6 @@
 {
   "version": 2,
-  "routes": [{ "src": "/(.*)", "dest": "/" }],
-  "functions": {
-    "api/customer/register.js": {
-      "maxDuration": 30
-    }
-  }
+  "builds": [{ "src": "*.js", "use": "@vercel/node" }],
+
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
 }
