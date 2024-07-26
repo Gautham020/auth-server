@@ -8,7 +8,6 @@ const {
   verifyOtp,
   customer,
 } = require("../controller/Customer");
-const fetchCustomer = require("../middleware/Customer");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
