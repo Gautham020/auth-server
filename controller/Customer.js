@@ -156,9 +156,21 @@ const verifyOtp = async (req, res) => {
   }
 };
 
+const customer = async (req, res) => {
+  try {
+    let cutomer = await customerSchema.find();
+    console.log(cutomer);
+    res.json(cutomer);
+  } catch (error) {
+    console.log("Error occurred" + err);
+    res.json({ error: err });
+  }
+};
+
 module.exports = {
   Register,
   Login,
   Otp,
   verifyOtp,
+  customer,
 };
