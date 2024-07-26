@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://login-app-api.vercel.app", // Frontend origin
+    origin: "https://auth-server-red.vercel.app", // Frontend origin
     credentials: true,
   })
 );

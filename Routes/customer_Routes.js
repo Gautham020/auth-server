@@ -1,7 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { Register, Login, Otp, verifyOtp } = require("../controller/Customer");
+const {
+  Register,
+  Login,
+  Otp,
+  verifyOtp,
+  customer,
+} = require("../controller/Customer");
 const fetchCustomer = require("../middleware/Customer");
 
 const storage = multer.diskStorage({
@@ -20,6 +26,7 @@ router.post("/register", Register);
 router.post("/login", Login);
 router.post("/otp", Otp);
 router.post("/verifyotp", verifyOtp);
+router.get("/viewcustomer", customer);
 
 // Example of a protected route
 
