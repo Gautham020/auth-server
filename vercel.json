@@ -2,7 +2,7 @@
   "version": 2,
   "routes": [{ "src": "/(.*)", "dest": "/" }],
   "functions": {
-    "api/**.js": {
+    "api/customer/register.js": {
       "maxDuration": 30
     }
   }
