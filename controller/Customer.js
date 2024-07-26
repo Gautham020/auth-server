@@ -1,5 +1,5 @@
 const customerSchema = require("../Models/customer_schema");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const env = require("dotenv");
