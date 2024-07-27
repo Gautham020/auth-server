@@ -1,29 +1,24 @@
 const customerSchema = require("../Models/customer_schema");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+const jsonwebtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+const env = require("dotenv");
+env.config();
 
-dotenv.config();
-
-const SECRET_KEY = process.env.TOKEN_SECRET; // Corrected variable name
+const SECRETE_KEY = process.env.TOKEN_SECRET; // Use a secure and environment-specific secret key
 
 // Register a new customer
 const Register = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
 
-    // Check if email already exists
-    const existingCustomer = await customerSchema.findOne({ email });
-    if (existingCustomer) {
+    const checkEmail = await customerSchema.findOne({ email });
+    if (checkEmail) {
       return res.status(400).json({ message: "Email already exists!" });
     }
 
-    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    // Create a new customer record
     const newCustomer = new customerSchema({
       name,
       phone,
@@ -31,7 +26,6 @@ const Register = async (req, res) => {
       password: hashedPassword,
     });
 
-    // Save the new customer to the database
     const savedCustomer = await newCustomer.save();
     console.log("New customer registered successfully");
     res.status(201).json({
@@ -41,7 +35,7 @@ const Register = async (req, res) => {
     });
   } catch (err) {
     console.error("Error occurred:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err, message: "Internal Server Error" });
   }
 };
 
@@ -50,20 +44,17 @@ const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find user by email
     const user = await customerSchema.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email or password!" });
+      return res.status(400).json({ message: "Email or Password Invalid!" });
     }
 
-    // Check if password matches
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid email or password!" });
+    const checkPassword = await bcrypt.compare(password, user.password);
+    if (!checkPassword) {
+      return res.status(400).json({ message: "Email or Password Invalid!" });
     }
 
-    // Generate JWT token
-    const token = jwt.sign({ userId: user.id }, SECRET_KEY, {
+    const token = jsonwebtoken.sign({ userId: user.id }, SECRETE_KEY, {
       expiresIn: "1h",
     });
     console.log("Login successful!");
@@ -75,7 +66,7 @@ const Login = async (req, res) => {
     });
   } catch (err) {
     console.error("Error occurred:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err, message: "Internal Server Error" });
   }
 };
 
@@ -88,29 +79,25 @@ const Otp = async (req, res) => {
       return res.status(400).json({ message: "Email is required" });
     }
 
-    // Generate a 4-digit OTP
-    const generateOtp = Math.floor(1000 + Math.random() * 9000);
+    const generateOtp = Math.floor(1000 + Math.random() * 9000); // 4-digit OTP
 
-    // Set up email transporter
     const transporter = nodemailer.createTransport({
       host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
-        user: process.env.MAILTRAP_USER,
+        user: process.env.MAILTRAP_USER, // Use environment variables for sensitive info
         pass: process.env.MAILTRAP_PASS,
       },
     });
 
-    // Send the OTP email
     const info = await transporter.sendMail({
-      from: "no-reply@example.com", // Use a standard no-reply address
-      to: email,
-      subject: "Your OTP Code",
-      html: `<b>Your OTP is: <i>${generateOtp}</i></b>`,
+      from: "gauthamkotian020@gmail.com", // sender address
+      to: email, // list of receivers
+      subject: "New OTP Generated", // Subject line
+      html: `<b>OTP is: <i>${generateOtp}</i></b>`, // HTML body
     });
 
     if (info.messageId) {
-      // Update user with the generated OTP
       const user = await customerSchema.findOneAndUpdate(
         { email },
         { otp: generateOtp },
@@ -121,13 +108,15 @@ const Otp = async (req, res) => {
         return res.status(400).json({ message: "User does not exist" });
       }
 
-      return res.status(200).json({ message: "OTP sent successfully", success: true });
+      return res
+        .status(200)
+        .json({ message: "OTP Sent Successfully", success: true });
     }
 
     return res.status(500).json({ message: "Failed to send OTP" });
   } catch (err) {
     console.log("Error occurred:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -140,18 +129,15 @@ const verifyOtp = async (req, res) => {
       return res.status(400).json({ message: "Email and OTP are required!" });
     }
 
-    // Find user with matching email and OTP
     const user = await customerSchema.findOne({ email, otp });
     if (!user) {
       return res.status(400).json({ message: "Invalid OTP!" });
     }
 
-    // Clear the OTP after verification
-    user.otp = null; 
+    user.otp = 0; // Clear OTP after successful verification
     await user.save();
 
-    // Generate a JWT token
-    const token = jwt.sign({ userId: user.id }, SECRET_KEY, {
+    const token = jsonwebtoken.sign({ userId: user.id }, SECRETE_KEY, {
       expiresIn: "1h",
     });
 
@@ -163,18 +149,21 @@ const verifyOtp = async (req, res) => {
     });
   } catch (err) {
     console.error("Error occurred:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ error: err.message, message: "Internal Server Error" });
   }
 };
 
 // Get all customers
-const getAllCustomers = async (req, res) => {
+const customer = async (req, res) => {
   try {
     const customers = await customerSchema.find();
+    console.log(customers);
     res.json(customers);
   } catch (err) {
     console.log("Error occurred:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.json({ error: err.message });
   }
 };
 
@@ -183,5 +172,5 @@ module.exports = {
   Login,
   Otp,
   verifyOtp,
-  getAllCustomers,
+  customer,
 };
