@@ -5,7 +5,11 @@ const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(
-  cors()
+  cors({
+    origin: ["https://deploy-mern-1whq.vercel.app"],
+    method: ["POST", "GET"],
+    credentials: true,
+  })
 );
 const PORT = process.env.PORT || 4000;
 app.use("/customer", require("./Routes/customer_Routes"));
