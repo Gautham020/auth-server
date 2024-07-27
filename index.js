@@ -1,27 +1,22 @@
 const express = require("express");
 const ConnectToMongo = require("./db");
+ConnectToMongo();
 const cors = require("cors");
-
-// Initialize Express app
 const app = express();
-
-// Middleware
 app.use(express.json());
 app.use(
   cors({
     origin: ["https://login-app-api.vercel.app"],
-    methods: ["POST", "GET"],
+    method: ["POST", "GET"],
     credentials: true,
   })
 );
-
-// Database connection
-ConnectToMongo();
-
-// Routes
+const PORT = process.env.PORT || 4000;
 app.use("/customer", require("./Routes/customer_Routes"));
 
-// Vercel function handler
-module.exports = (req, res) => {
-  app(req, res);
-};
+//uploads
+// app.use("/uploads/customer", express.static("./Uploads/customer"));
+
+app.listen(PORT, () => {
+  console.log(`Server is running on the port ${PORT}`);
+});
