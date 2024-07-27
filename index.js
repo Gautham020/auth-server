@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://deploy-mern-1whq.vercel.app"],
+    origin: ["https://login-app-api.vercel.app"],
     method: ["POST", "GET"],
     credentials: true,
   })
