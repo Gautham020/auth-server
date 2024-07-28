@@ -83,8 +83,7 @@ const Otp = async (req, res) => {
     const generateOtp = Math.floor(1000 + Math.random() * 9000); // 4-digit OTP
 
     const transporter = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+    service:"gmail",
       auth: {
         user: process.env.MAILTRAP_USER, // Use environment variables for sensitive info
         pass: process.env.MAILTRAP_PASS,
@@ -97,7 +96,7 @@ const Otp = async (req, res) => {
       subject: "New OTP Generated", // Subject line
       html: `<b>OTP is: <i>${generateOtp}</i></b>`, // HTML body
     });
-
+console.log(info,"info");
     if (info.messageId) {
       const user = await customerSchema.findOneAndUpdate(
         { email },
