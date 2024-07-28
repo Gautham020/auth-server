@@ -11,6 +11,7 @@ const SECRETE_KEY = process.env.TOKEN_SECRET; // Use a secure and environment-sp
 const Register = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
+    console.log()
 
     const checkEmail = await customerSchema.findOne({ email });
     if (checkEmail) {
