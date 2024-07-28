@@ -44,7 +44,7 @@ console.log(req.body,"Request");
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+console.log(req.body);
     const user = await customerSchema.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Email or Password Invalid!" });
