@@ -6,20 +6,12 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // MongoDB connection URI from environment variables
-const mongoURI = process.env.MONGO_URL;
+// const mongoURI = process.env.MONGO_URL;
 
 // Connect to MongoDB
-mongoose.connect(
-  mongoURI,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err) => {
-    if (err) {
-      console.error('Failed to connect to MongoDB', err.message);
-    } else {
-      console.log('Connected to MongoDB');
-    }
-  }
-);
+mongoose.connect(process.env.MONGO_URL,() => {
+    console.log("Mongo connected");
+});
 
 // Optional: handle connection events for better debugging
 mongoose.connection.on('connected', () => {
