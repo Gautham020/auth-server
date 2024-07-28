@@ -11,8 +11,9 @@ const SECRETE_KEY = process.env.TOKEN_SECRET; // Use a secure and environment-sp
 const Register = async (req, res) => {
   try {
     const { name, email, phone, password } = req.body;
-
+console.log(req.body,"Request");
     const checkEmail = await customerSchema.findOne({ email });
+    console.log(checkEmail,"checkEmail");
     if (checkEmail) {
       return res.status(400).json({ message: "Email already exists!" });
     }
