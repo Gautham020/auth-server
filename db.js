@@ -1,28 +1,37 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const env = require("dotenv");
-env.config();
-const uri = process.env.MONGO_URI;
+// db.js
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-      serverSelectionTimeoutMS: 15000,
+// Load environment variables from .env file
+dotenv.config();
 
-  },
+// MongoDB connection URI from environment variables
+const mongoURI = process.env.MONGO_URL;
+
+// Connect to MongoDB
+mongoose.connect(
+  mongoURI,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (err) {
+      console.error('Failed to connect to MongoDB', err.message);
+    } else {
+      console.log('Connected to MongoDB');
+    }
+  }
+);
+
+// Optional: handle connection events for better debugging
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to DB');
 });
 
-const connectToMongo = async () => {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log(
-      "Pinged your deployment. You successfully connected to MongoDB!"
-    );
-  } catch (err) {
-    console.error("Failed to connect to MongoDB", err);
-  }
-};
+mongoose.connection.on('error', (err) => {
+  console.error(`Mongoose connection error: ${err.message}`);
+});
 
-module.exports = connectToMongo;
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected from DB');
+});
+
+module.exports = mongoose;
