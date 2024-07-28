@@ -14,6 +14,7 @@ const Register = async (req, res) => {
     const { name, email, phone, password } = req.body;
 
     const checkEmail = await temporarySchema.findOne({ email });
+
     if (checkEmail) {
       return res.status(400).json({ message: "Email already exists!" });
     }
@@ -171,7 +172,7 @@ const Register = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
+console.log(req.body);
     const user = await customerSchema.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Email or Password Invalid!" });
@@ -198,7 +199,9 @@ const Login = async (req, res) => {
   }
 };
 
-//customer verify otp
+
+
+// Verify OTP for user authentication
 const verifyOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
