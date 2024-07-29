@@ -1,6 +1,6 @@
 <h1 align="center" id="title">Backend Overview</h1>
 
-<p align="center"><img src="" alt="project-image"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/Gautham020/login-app/master/public/signin.png" alt="project-image"></p>
 
 <p id="description">This project is a backend for a laundry service application featuring user registration with OTP verification and a secure login system. The backend is built using Node.js and Express with MongoDB Atlas as the database. The code provides APIs for user registration OTP generation and authentication.</p>
 
