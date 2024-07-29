@@ -8,7 +8,7 @@
 
 <img src="https://raw.githubusercontent.com/Gautham020/login-app/master/public/fv.png" alt="project-screenshot" width="100" height="100/">
 
-<img src="https://login-app-api.vercel.app/server.png" alt="project-screenshot" width="300" height="200/">
+<img src="https://raw.githubusercontent.com/Gautham020/login-app/master/public/server.png" alt="project-screenshot" width="300" height="200/">
 
 <h2>🛠️ Installation Steps:</h2>
 
